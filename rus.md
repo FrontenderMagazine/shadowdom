@@ -448,7 +448,7 @@ function updateClicked(nameTagSelector, textBoxSelector) {
 .name {
   font-size: 45pt;
   font-weight: normal;
-  margin-top: 0.8em;
+  margin-top: 0.4em;
   padding-top: 0.2em;
 }
 </style>
@@ -526,8 +526,44 @@ function updateClicked(nameTagSelector, textBoxSelector) {
 `<content select=".email">`. Сколько раз будет отображаться электронный адрес
 Сергея и в каком цвете?
 
-![Результат, который будет отображаться. Электронный адрес Сергея выводится в
-жёлтом цвете.][Сергей]
+<div id="ex4a">
+
+<div id="ex4aNameTag">
+  <div class="first">Сергей</div>
+  <div>C. Максимов</div>
+  <div class="email">serg@</div>
+</div>
+<template id="ex4aNameTagTemplate">
+<div style="background: purple; padding: 1em;">
+  <div style="color: red;">
+    <content select=".first"></content>
+  </div>
+  <div style="color: yellow;">
+    <content select="div"></content>
+  </div>
+  <div style="color: blue;">
+    <content select=".email"></content>
+  </div>
+</div>
+</template>
+
+</div>
+
+<script>
+(function () {
+  if (!window.HTMLTemplateElement ||
+      !HTMLElement.prototype.webkitCreateShadowRoot) {
+    remove('#ex4a');
+    document.write('<img src="img/SS5-ru.png" alt="Результат. Адрес электронной почты Сергея отображен желтым цветом." id="ex4a">');
+    return;
+  }
+  var shadow = document.querySelector('#ex4aNameTag').webkitCreateShadowRoot();
+  var template = document.querySelector('#ex4aNameTagTemplate');
+  shadow.appendChild(template.content);
+  template.remove();
+})();
+</script>
+
 
 Ответ: электронный адрес Сергея выводится один раз, в желтом цвете.
 
