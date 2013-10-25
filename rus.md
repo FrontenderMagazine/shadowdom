@@ -422,7 +422,60 @@ function updateClicked(nameTagSelector, textBoxSelector) {
 
 Теперь мы получили именную табличку с текстом на японском языке:
 
-![Именная табличка с акварельным рисунком цветущей вишни][вишня]
+<div id="ex3a">
+
+<div id="ex3aNameTag">Илья</div>
+
+<p>
+<label for="ex3aNewName">Новое имя:</label>
+<input name="ex3aNewName" value="基子">
+<button onclick="updateClicked('#ex3aNameTag', 'input[name=ex3aNewName]');">Обновить</button>
+</p>
+
+<template id="ex3aNameTagTemplate">
+<style>
+.outer {
+  border: 2px solid pink;
+  border-radius: 1em;
+  background: url(img/sakura.jpg);
+  font-size: 20pt;
+  width: 12em;
+  height: 7em;
+  text-align: center;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+.name {
+  font-size: 45pt;
+  font-weight: normal;
+  margin-top: 0.8em;
+  padding-top: 0.2em;
+}
+</style>
+<div class="outer">
+  <div class="name">
+    <content></content>
+  </div>
+  と申します。
+</div>
+</template>
+
+</div>
+
+<script>
+(function () {
+  if (!window.HTMLTemplateElement ||
+      !HTMLElement.prototype.webkitCreateShadowRoot) {
+    remove('#ex3a');
+    document.write('<img src="img/SS4-ru.png" alt="Тег имени с акварельным рисунком вишни.">');
+    return;
+  }
+  var shadow = document.querySelector('#ex3aNameTag').webkitCreateShadowRoot();
+  var template = document.querySelector('#ex3aNameTagTemplate');
+  shadow.appendChild(template.content);
+  template.remove();
+})();
+</script>
 
 [Автор фонового изображения — Майк Дауман (Mike Dowman)][6]; изображение
 использовано в согласии с условиями лицензии Creative Commons.
