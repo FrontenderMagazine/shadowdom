@@ -399,10 +399,10 @@ JavaScript может случайно изменить составляющие
 Пользователь увидит нечто вроде:
 
 <div class="dateRangePicker">
-  <label for="start">Start:</label>
+  <label for="start">C:</label>
   <input type="date" name="startDate" id="start">
   <br>
-  <label for="end">End:</label>
+  <label for="end">По:</label>
   <input type="date" name="endDate" id="end">
 </div>
 
