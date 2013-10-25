@@ -93,7 +93,37 @@ JavaScript может случайно изменить составляющие
 Теперь мы посмотрим как, используя теневую модель документа, можно разделить
 контент и представление. Скажем, у нас есть вот такая именная табличка:
 
-<iframe src="http://result.dabblet.com/gist/6725123/ab996b3bec6b36cf4dcdff9dc15f1651b5045ad7"></iframe>
+<style>
+.ex2a.outer {
+  border: 2px solid brown;
+  border-radius: 1em;
+  background: red;
+  font-size: 20pt;
+  width: 12em;
+  height: 7em;
+  text-align: center;
+}
+.ex2a .boilerplate {
+  color: white;
+  font-family: sans-serif;
+  padding: 0.5em;
+}
+.ex2a .name {
+  color: black;
+  background: white;
+  font-family: "Marker Felt", cursive;
+  font-size: 45pt;
+  padding-top: 0.2em;
+}
+</style>
+<div class="ex2a outer">
+  <div class="boilerplate">
+    Hi! My name is
+  </div>
+  <div class="name">
+    Bob
+  </div>
+</div>
 
 Вот разметка. Такую вы бы написали сейчас. В ней не используется теневая модель
 документа.
