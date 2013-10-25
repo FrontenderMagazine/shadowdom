@@ -275,6 +275,38 @@ JavaScript может случайно изменить составляющие
 и всё. Отображение именной таблички автоматически обновляется браузером, потому
 что происходит **проецирование** её содержимого туда, где расположен `<content>`.
 
+<div id="ex2b">
+  <p>Пример использования Shadow DOM:</p>
+  <div id="ex2bNameTag">Игорь</div>
+  <p>
+    <label for="ex2bNewName">Новое имя:</label>
+    <input name="ex2bNewName" value="Анна">
+    <button onclick="updateClicked('#ex2bNameTag', 'input[name=ex2bNewName]');">Обновить</button>
+  </p>
+  <script>
+    function updateClicked(nameTagSelector, textBoxSelector) {
+      var text = document.querySelector(textBoxSelector);
+      document.querySelector(nameTagSelector).textContent = text.value;
+      text.value = '';
+      text.focus();
+    }
+  </script>
+  <script>
+    (function () {
+      if (!window.HTMLTemplateElement ||
+          !HTMLElement.prototype.webkitCreateShadowRoot) {
+        remove('#ex2b');
+        return;
+      }
+
+      var shadow = document.querySelector('#ex2bNameTag').webkitCreateShadowRoot();
+      var template = document.querySelector('#ex2bNameTagTemplate');
+      shadow.appendChild(template.content);
+      template.remove();
+    })();
+  </script>
+</div>
+
 Теперь мы добились разделения контента и представления. **Контент помещён в
 дерево страницы; представление — в теневое дерево.** Когда приходит время
 что-либо отобразить, браузер их синхронизирует автоматически.
