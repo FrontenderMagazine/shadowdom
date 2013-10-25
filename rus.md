@@ -300,35 +300,75 @@ if (!HTMLElement.prototype.webkitCreateShadowRoot) {
 что происходит **проецирование** её содержимого туда, где расположен `<content>`.
 
 <div id="ex2b">
-  <p>Пример использования Shadow DOM:</p>
-  <div id="ex2bNameTag">Игорь</div>
-  <p>
-    <label for="ex2bNewName">Новое имя:</label>
-    <input name="ex2bNewName" value="Анна">
-    <button onclick="updateClicked('#ex2bNameTag', 'input[name=ex2bNewName]');">Обновить</button>
-  </p>
-  <script>
-    function updateClicked(nameTagSelector, textBoxSelector) {
-      var text = document.querySelector(textBoxSelector);
-      document.querySelector(nameTagSelector).textContent = text.value;
-      text.value = '';
-      text.focus();
-    }
-  </script>
-  <script>
-    (function () {
-      if (!window.HTMLTemplateElement ||
-          !HTMLElement.prototype.webkitCreateShadowRoot) {
-        remove('#ex2b');
-        return;
-      }
 
-      var shadow = document.querySelector('#ex2bNameTag').webkitCreateShadowRoot();
-      var template = document.querySelector('#ex2bNameTagTemplate');
-      shadow.appendChild(template.content);
-      template.remove();
-    })();
-  </script>
+<p>Пример использования Shadow DOM:</p>
+
+<div id="ex2bNameTag">Иван</div>
+
+<p>
+<label for="ex2bNewName">Новое имя:</label>
+<input name="ex2bNewName" value="Аня">
+<button onclick="updateClicked('#ex2bNameTag', 'input[name=ex2bNewName]');">Обновить</button>
+</p>
+
+<script>
+function updateClicked(nameTagSelector, textBoxSelector) {
+  var text = document.querySelector(textBoxSelector);
+  document.querySelector(nameTagSelector).textContent = text.value;
+  text.value = '';
+  text.focus();
+}
+</script>
+
+<template id="ex2bNameTagTemplate">
+<style>
+.outer {
+  border: 2px solid brown;
+  border-radius: 1em;
+  background: red;
+  font-size: 20pt;
+  width: 12em;
+  height: 7em;
+  text-align: center;
+}
+.boilerplate {
+  color: white;
+  font-family: sans-serif;
+  padding: 0.5em;
+}
+.name {
+  color: black;
+  background: white;
+  font-family: "Marker Felt", cursive;
+  font-size: 45pt;
+  padding-top: 0.2em;
+  height: 55pt;
+  overflow: hidden;
+}
+</style>
+<div class="outer">
+  <div class="boilerplate">
+    Привет! Меня зовут
+  </div>
+  <div class="name">
+    <content></content>
+  </div>
+</div>
+</template>
+<script>
+(function () {
+  if (!window.HTMLTemplateElement ||
+      !HTMLElement.prototype.webkitCreateShadowRoot) {
+    remove('#ex2b');
+    return;
+  }
+
+  var shadow = document.querySelector('#ex2bNameTag').webkitCreateShadowRoot();
+  var template = document.querySelector('#ex2bNameTagTemplate');
+  shadow.appendChild(template.content);
+  template.remove();
+})();
+</script>
 </div>
 
 Теперь мы добились разделения контента и представления. **Контент помещён в
@@ -504,269 +544,6 @@ if (!HTMLElement.prototype.webkitCreateShadowRoot) {
 названием настраиваемые элементы, можно прописать теневое дерево для виджетов
 декларативно вместо того, чтобы использовать для этого скрипты.
 
-<template id="ex2bNameTagTemplate">
-<style>
-.outer {
-  border: 2px solid brown;
-  border-radius: 1em;
-  background: red;
-  font-size: 20pt;
-  width: 12em;
-  height: 7em;
-  text-align: center;
-}
-.boilerplate {
-  color: white;
-  font-family: sans-serif;
-  padding: 0.5em;
-}
-.name {
-  color: black;
-  background: white;
-  font-family: "Marker Felt", cursive;
-  font-size: 45pt;
-  padding-top: 0.2em;
-  height: 55pt;
-  overflow: hidden;
-}
-</style>
-<div class="outer">
-  <div class="boilerplate">
-    Hi! My name is
-  </div>
-  <div class="name">
-    &nbsp;<content></content>&nbsp;
-  </div>
-</div>
-</template>
-<script>
-(function () {
-  if (!window.HTMLTemplateElement ||
-      !HTMLElement.prototype.webkitCreateShadowRoot) {
-    remove('#ex2b');
-    return;
-  }
-
-  var shadow = document.querySelector('#ex2bNameTag').webkitCreateShadowRoot();
-  var template = document.querySelector('#ex2bNameTagTemplate');
-  shadow.appendChild(template.content);
-  template.remove();
-})();
-</script>
-</div>
-
-
-<p>
-Now we have achieved separation of content and presentation. <b>The
-content is in the document; the presentation is in the Shadow DOM.</b>
-They are automatically kept in sync by the browser when it comes time
-to render something.
-</p>
-
-<h3 id="toc-separation-profit">Step 3: Profit</h3>
-
-<p>
-By separating content and presentation, we can simplify the
-code that manipulates the content — in the name tag example, that
-code only needs to deal with a simple structure containing
-one <code>&lt;div&gt;</code> instead of several.
-</p>
-
-<p>
-Now if we change our presentation, we don't need to change any of the
-code!
-</p>
-
-<p>
-For example, say we want to localize our name tag. It is still a name
-tag, so the semantic content in the document doesn’t change:
-</p>
-
-<pre class="prettyprint">
-&lt;div id="nameTag"&gt;Bob&lt;/div&gt;
-</pre>
-
-<p>
-The shadow root setup code stays the same. Just what gets put in the
-shadow root changes:
-</p>
-
-<pre class="prettyprint">
-&lt;template id="nameTagTemplate"&gt;
-&lt;style&gt;
-.outer {
-  border: 2px solid pink;
-  border-radius: 1em;
-  background: url(sakura.jpg);
-  font-size: 20pt;
-  width: 12em;
-  height: 7em;
-  text-align: center;
-  font-family: sans-serif;
-  font-weight: bold;
-}
-.name {
-  font-size: 45pt;
-  font-weight: normal;
-  margin-top: 0.8em;
-  padding-top: 0.2em;
-}
-&lt;/style&gt;
-&lt;div class="outer"&gt;
-  &lt;div class="name"&gt;
-    &lt;content&gt;&lt;/content&gt;
-  &lt;/div&gt;
-  と申します。
-&lt;/div&gt;
-&lt;/template&gt;
-</pre>
-
-<p>
-Now we've got a Japanese name tag:
-</p>
-
-<div id="ex3a">
-
-<div id="ex3aNameTag">Bob</div>
-
-<p>
-<label for="ex3aNewName">New name:</label>
-<input name="ex3aNewName" value="基子">
-<button onclick="updateClicked('#ex3aNameTag', 'input[name=ex3aNewName]');">Update</button>
-</p>
-
-<template id="ex3aNameTagTemplate">
-<style>
-.outer {
-  border: 2px solid pink;
-  border-radius: 1em;
-  background: url(sakura.jpg);
-  font-size: 20pt;
-  width: 12em;
-  height: 7em;
-  text-align: center;
-  font-family: sans-serif;
-  font-weight: bold;
-}
-.name {
-  font-size: 45pt;
-  font-weight: normal;
-  margin-top: 0.8em;
-  padding-top: 0.2em;
-}
-</style>
-<div class="outer">
-  <div class="name">
-    <content></content>
-  </div>
-  と申します。
-</div>
-</template>
-
-</div>
-
-<script>
-(function () {
-  if (!window.HTMLTemplateElement ||
-      !HTMLElement.prototype.webkitCreateShadowRoot) {
-    remove('#ex3a');
-    document.write('<img src="SS4.png" alt="A name tag with a watercolor painting of cherry blossoms on it.">');
-    return;
-  }
-  var shadow = document.querySelector('#ex3aNameTag').webkitCreateShadowRoot();
-  var template = document.querySelector('#ex3aNameTagTemplate');
-  shadow.appendChild(template.content);
-  template.remove();
-})();
-</script>
-
-<p class="small-notice">
-<a href="http://www.flickr.com/photos/mikedowman/5621169045/">Background image by Mike Dowman,</a> reused under Creative Commons license.
-</p>
-
-<p>
-This is a big improvement over the situation on the web today, because
-your name update code can depend on the structure of the
-<em>component</em> which is simple and consistent. <strong>Your name
-update code doesn’t need to know the structure used for
-rendering.</strong> If we consider what is rendered, the name appears
-second in English (after “Hi! My name is”), but first in Japanese
-(before “と申します”). That distinction is semantically meaningless
-from the point of view of updating the name that is being displayed,
-so the name update code doesn’t have to know about that detail.
-</p>
-
-<h2 id="toc-projection">Extra Credit: Advanced Projection</h2>
-
-<p>
-In the above example, the <code>&lt;content&gt;</code> element
-cherry-picks all of the content from the shadow host. By using the
-<span class="attribute">select</span> attribute, you can control what
-a content element projects. You can also use multiple content
-elements.
-</p>
-
-<p>
-For example, if you have a document which contains this:
-</p>
-
-<pre class="prettyprint">
-&lt;div id="nameTag"&gt;
-  &lt;div class="first"&gt;Bob&lt;/div&gt;
-  &lt;div&gt;B. Love&lt;/div&gt;
-  &lt;div class="email"&gt;bob@&lt;/div&gt;
-&lt;/div&gt;
-</pre>
-
-<p>
-and a shadow root which uses CSS selectors to select specific content:
-</p>
-
-<pre class="prettyprint">
-&lt;div style="background: purple; padding: 1em;"&gt;
-  &lt;div style="color: red;"&gt;
-    &lt;content <b>select=".first"</b>&gt;&lt;/content&gt;
-  &lt;/div&gt;
-  &lt;div style="color: yellow;"&gt;
-    &lt;content <b>select="div"</b>&gt;&lt;/content&gt;
-  &lt;/div&gt;
-  &lt;div style="color: blue;"&gt;
-    &lt;content <b>select=".email"&gt;</b>&lt;/content&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-</pre>
-
-<p class="notice"><b>Note:</b> <span class="attribute">select</span> can only
-select elements which are immediate children of the host node. That is, you
-cannot select descendants (e.g.<code>select="table tr"</code>).</p>
-
-<p>
-The <code>&lt;div class="email"&gt;</code> element is matched by both
-the <code>&lt;content select="div"&gt;</code> and <code>&lt;content
-select=".email"&gt;</code> elements. How many times does Bob’s email
-address appear, and in what colors?
-</p>
-
-<div id="ex4a">
-
-<div id="ex4aNameTag">
-  <div class="first">Bob</div>
-  <div>B. Love</div>
-  <div class="email">bob@</div>
-</div>
-<template id="ex4aNameTagTemplate">
-<div style="background: purple; padding: 1em;">
-  <div style="color: red;">
-    <content select=".first"></content>
-  </div>
-  <div style="color: yellow;">
-    <content select="div"></content>
-  </div>
-  <div style="color: blue;">
-    <content select=".email"></content>
-  </div>
-</div>
-</template>
 
 [1]: https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html
 [2]: http://www.w3.org/TR/shadow-dom/
