@@ -142,10 +142,10 @@ if (!HTMLElement.prototype.webkitCreateShadowRoot) {
 </style>
 <div class="ex2a outer">
   <div class="boilerplate">
-    Hi! My name is
+    Привет! Меня зовут
   </div>
   <div class="name">
-    Bob
+    Сергей
   </div>
 </div>
 
