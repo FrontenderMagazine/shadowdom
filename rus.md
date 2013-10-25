@@ -69,11 +69,35 @@ JavaScript может случайно изменить составляющие
 
 то вместо
 
-![Скриншот кнопки с надписью «Здравствуй, мир!»][Здравствуй]
+<button id="ex1a">Привет, мир!</button>
+<script>
+function remove(selector) {
+  Array.prototype.forEach.call(
+      document.querySelectorAll(selector),
+      function (node) { node.parentNode.removeChild(node); });
+}
+
+if (!HTMLElement.prototype.webkitCreateShadowRoot) {
+  remove('#ex1a');
+  document.write('<img src="img/SS1-ru.png" alt="Скриншот кнопки с текстом на русском">');
+}
+</script>
 
 на вашей странице будет отображено
 
-![Скриншот кнопки с надписью «Здравствуй, мир!» на японском языке][японский]
+<button id="ex1b">Привет, мир!</button>
+<script>
+(function () {
+  if (!HTMLElement.prototype.webkitCreateShadowRoot) {
+    remove('#ex1b');
+    document.write('<img src="img/SS2.png" alt="Скриншот кнопки с текстом на японском">');
+    return;
+  }
+  var host = document.querySelector('#ex1b');
+  var root = host.webkitCreateShadowRoot();
+  root.textContent = 'こんにちは、影の世界!';
+})();
+</script>
 
 Это ещё не всё, если JavaScript страницы запросит `textContent` кнопки, ответом
 будет не «こんにちは、影の世界!», а «Здравствуй, мир!», потому что дочернее дерево
